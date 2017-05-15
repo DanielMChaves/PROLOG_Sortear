@@ -6,6 +6,7 @@
 % P ------- OUT
 % Fin ----- IN
 
+sortear([],_,_,_,[]).
 sortear(Ini,C,N,P,Fin) :-
   esLista(Ini),
   esLista(Fin),
@@ -14,10 +15,9 @@ sortear(Ini,C,N,P,Fin) :-
   length(Ini,TIni),
   generarP(TIni,LP),
   generarN(C,LN),
-  productoCartesiano(LP,LN,LCartesiano).
-%  length(Fin,TFin),
-%  buscarSolucion(..,TFin,Posible),
-%  Posible == Fin.
+  productoCartesiano(LP,LN,LCartesiano),
+  length(Fin,TFin),
+  obtenerSolucion(Ini,Fin,LCartesiano,TFin,P,N).
 
 % esLista/1: Comprueba que el elemento pasado es una lista
 esLista(X) :-
@@ -55,3 +55,14 @@ productoCartesianoAux([],[_|T2],L3,L4):-
     productoCartesianoAux(L4,T2,L3,L4).
 productoCartesianoAux([H1|T1],[H2|T2],[[H1,H2]|T3],L4):-
   productoCartesianoAux(T1,[H2|T2],T3,L4).
+
+% obtenerSolucion/6: Genera y comprueba las soluciones
+obtenerSolucion(Ini,Fin,[[P,N]|LCs],TFin,P,N) :-
+  eliminarElementos(Ini,Ini,P,N,TFin,Posible),
+  Fin == Posible.
+obtenerSolucion(Ini,Fin,[_|LCs],TFin,P,N) :-
+  obtenerSolucion(Ini,Fin,LCs,TFin,P,N).
+obtenerSolucion(_,_,[],_,_,_) :-
+  fail.
+
+eliminarElementos(Ini,Ini,P,N,TFin,Posible).
