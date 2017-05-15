@@ -57,12 +57,40 @@ productoCartesianoAux([H1|T1],[H2|T2],[[H1,H2]|T3],L4):-
   productoCartesianoAux(T1,[H2|T2],T3,L4).
 
 % obtenerSolucion/6: Genera y comprueba las soluciones
-obtenerSolucion(Ini,Fin,[[P,N]|LCs],TFin,P,N) :-
-  eliminarElementos(Ini,Ini,P,N,TFin,Posible),
+obtenerSolucion(Ini,Fin,[[P,N]|_],TFin,P,N) :-
+  prepararLista(Ini,P,N,TFin,Posible),
   Fin == Posible.
 obtenerSolucion(Ini,Fin,[_|LCs],TFin,P,N) :-
   obtenerSolucion(Ini,Fin,LCs,TFin,P,N).
 obtenerSolucion(_,_,[],_,_,_) :-
   fail.
 
-eliminarElementos(Ini,Ini,P,N,TFin,Posible).
+% prepararLista/5: Genera listas de soluciones
+% SOLO FUNCIONA CUANDO LAS LISTAS TIENEN LETRAS
+prepararLista(Ini,P,N,TFin,Posible) :-
+  seleccionarPosicion(Ini,P,LP1,LP2),
+  append(LP2,LP1,LP),
+  eliminarElementos(LP,LP,N,N,TFin,PosibleDesordenado),
+  sort(PosibleDesordenado,Posible).
+
+% seleccionarPosicion/3: Genera una lista con la posicion dada
+seleccionarPosicion(Ini,0,[],Ini).
+seleccionarPosicion([CI|CIs],P,[CI|LP1s],LP2) :-
+  Nuevo is P - 1,
+  seleccionarPosicion(CIs,Nuevo,LP1s,LP2).
+
+% FALLA AQUÍ
+% CASO: Lista vacia
+eliminarElementos(LP,[],N,CN,TFin,PD) :-
+  eliminarElementos(LP,LP,N,CN,TFin,PD).
+% CASO: Fin del Eliminado
+eliminarElementos(_,CLP,_,_,TFin,CLP) :-
+  length(CLP,TCLP),
+  TCLP =:= TFin, !.
+% CASO: Contador a 0
+eliminarElementos(_,LP,N,0,TFin,PD) :-
+  eliminarElementos(LP,LP,N,N,TFin,PD).
+% CASO: Avance
+eliminarElementos(LP,[_|CLPs],N,CN,TFin,PD) :-
+  Nuevo is CN - 1,
+  eliminarElementos(LP,CLPs,N,Nuevo,TFin,PD).
