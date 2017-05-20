@@ -2,16 +2,11 @@
 
 % Modo de Uso
 %
-% Ini ----- IN
-% C ------- IN
-% N ------- OUT
-% P ------- OUT
-% Fin ----- IN
-
-% NOTA IMPORTANTE
-% Con N = 1 no funciona
-% Restaurar los Aux de P y N de 2 a 1
-% Arreglar eliminar Elementos
+% Ini ----- IN    Ini ----- IN    Ini ----- IN    Ini ----- IN
+% C ------- IN    C ------- IN    C ------- IN    C ------- IN
+% N ------- OUT   N ------- IN    N ------- OUT   N ------- IN
+% P ------- OUT   P ------- OUT   P ------- In    P ------- IN
+% Fin ----- IN    Fin ----- IN    Fin ----- IN    Fin ----- IN
 
 sortear([],_,_,_,[]).
 sortear(Ini,C,N,P,Fin) :-
@@ -83,15 +78,9 @@ seleccionarPosicion([_|CIs],P,LP2) :-
   Nuevo is P - 1,
   seleccionarPosicion(CIs,Nuevo,LP2).
 
-%%%%%%%%%%%%%%%%
-% Cuando N = 1 %
-%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%
-% Cuando N > 1 %
-%%%%%%%%%%%%%%%%
-
-% CASO: Contador a 0
+% eliminarElementos/6: Metodo que gestiona el eliminado
+% del elemento correspondiente
+% CASO: Eliminar
 eliminarElementos(LP1,[E|LP2s],N,1,TFin,PD) :-
   N =\= 1,
   eliminarElegido(LP1,[E|LP2s],LP1Mitad),
@@ -113,6 +102,7 @@ eliminarElementos(LP,[_|CLPs],N,CN,TFin,PD) :-
   Nuevo > 0,
   eliminarElementos(LP,CLPs,N,Nuevo,TFin,PD).
 
+% eliminarElegido/3: Elimina el elemento de la lista
 eliminarElegido(LP1,[E|LP2],LF) :-
   reverse(LP1,RLP1),
   length([E|LP2],TLP2),
