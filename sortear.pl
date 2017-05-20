@@ -8,6 +8,11 @@
 % P ------- OUT
 % Fin ----- IN
 
+% NOTA IMPORTANTE
+% Con N = 1 no funciona
+% Restaurar los Aux de P y N de 2 a 1
+% Arreglar eliminar Elementos
+
 sortear([],_,_,_,[]).
 sortear(Ini,C,N,P,Fin) :-
   esLista(Ini),
@@ -67,7 +72,6 @@ obtenerSolucion(Ini,Fin,[_|LCs],TFin,P,N) :-
 obtenerSolucion(_,_,[],_,_,_) :-
   fail.
 
-% HASTA AQUI BIEN
 % prepararLista/5: Genera listas de soluciones
 prepararLista(Ini,P,N,TFin,Posible) :-
   seleccionarPosicion(Ini,P,LP),
@@ -79,9 +83,17 @@ seleccionarPosicion([_|CIs],P,LP2) :-
   Nuevo is P - 1,
   seleccionarPosicion(CIs,Nuevo,LP2).
 
-% Posible Backtraking
+%%%%%%%%%%%%%%%%
+% Cuando N = 1 %
+%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%
+% Cuando N > 1 %
+%%%%%%%%%%%%%%%%
+
 % CASO: Contador a 0
 eliminarElementos(LP1,[E|LP2s],N,1,TFin,PD) :-
+  N =\= 1,
   eliminarElegido(LP1,[E|LP2s],LP1Mitad),
   append(LP1Mitad,LP2s,LP),
   eliminarElementos(LP,LP2s,N,N,TFin,PD).
@@ -96,6 +108,7 @@ eliminarElementos(LP,[],N,CN,TFin,PD) :-
   eliminarElementos(LP,LP,N,CN,TFin,PD).
 % CASO: Avance
 eliminarElementos(LP,[_|CLPs],N,CN,TFin,PD) :-
+  N =\= 1,
   Nuevo is CN - 1,
   Nuevo > 0,
   eliminarElementos(LP,CLPs,N,Nuevo,TFin,PD).
@@ -110,16 +123,10 @@ eliminarNElementos(X,0,X).
 eliminarNElementos([_|Xs],N,R) :-
   Nuevo is N - 1,
   eliminarNElementos(Xs,Nuevo,R).
-%remove_first_X(X,[X|Xs],Xs).
-%remove_first_X(X,[Y|Xs],[Y|Ys]) :-
-%  X \= Y,
-%  remove_first_X(X,Xs,Ys).
 
 % Pruebas
 
-% ?- eliminarElementos([a,b,c,d],[c,d],3,3,2,X).
-
-% ? - sortear([a,b,c,d,e,f],3,N,P,[a,c,d]).
+% ? - sortear([a,b,c,d,e,f],4,N,P,[a,c,d]).
 %
 % N = 3
 % P = 3
